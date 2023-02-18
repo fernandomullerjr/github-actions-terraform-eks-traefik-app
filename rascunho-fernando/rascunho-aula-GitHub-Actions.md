@@ -16,8 +16,10 @@ git push
 -----------------------------------------------------------------------------------------------------------------------------------------------
 ## RESUMO - Manual do projeto
 
+- Projeto usa região de Ohio(us-east-2).
 - Trigger são PR's e commits que tenham modificações em arquivos da pasta eks(manifestos do Terraform do Cluster EKS).
 - AWS Keys, ajustar. Cadastrar nas Secrets do repo do Github.
+- Projeto usa região de Ohio(us-east-2).
 - Criar bucket no S3 na mesma região que o projeto. Ajustar o manifesto de providers, colocando este bucket.
 - Criar 1 Token no Github, para uso no "actions/github-script@0.9.0". 
 - Habilitar permissões dos Actions nas settings do repositório. Marcar "Workflows have read and write permissions in the repository for all scopes."
@@ -1172,6 +1174,13 @@ version = "17.24.0"
 
 
 
+~~~~h
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "17.24.0"
+~~~~
+
+
 
 ~~~~bash
 fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt
@@ -1217,4 +1226,100 @@ eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
 
+https://github.com/fernandomullerjr/github-actions-terraform-eks-traefik-app/pull/4/commits/cfb80960324559789632f18bc68243c7df89c62b
+
+
+- OK!
+- Commit "cfb80960324559789632f18bc68243c7df89c62b" passou o init e o plan, OK.
+cfb80960324559789632f18bc68243c7df89c62b
+
+- Necessário fazer o merge com a main, para validar o apply.
+
+
+
+Ajustado version do Terraform para 1.0.5 nos versions e no pipeline.
+Para o módulo do EKS, foi setada a version 17.24.0, que não estava setada manualmente.
+
+
+
+
+
+
+
+
+
+Pull request successfully merged and closed
+
+You’re all set—the teste-branch-1 branch can be safely deleted.
+
+
+
+- Triggou a Action na main
+ Merge pull request #4 from fernandomullerjr/teste-branch-1 - Mergeand… Terraform CI #24: Commit e59577a pushed by fernandomullerjr
+main
+February 18, 2023 18:51 In progress
+
+
+
+
+
+
+
+
+
+- Erro durante apply:
+
+~~~~bash
+
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Creation complete after 1m25s [id=nat-081186370d79e1124]
+module.vpc.aws_route.private_nat_gateway[0]: Creating...
+module.vpc.aws_route.private_nat_gateway[0]: Creation complete after 1s [id=r-rtb-0a3b91070834b3b491080289494]
+╷
+│ Error: creating EKS Cluster (devops-ninja-eks-SSSQrpuN): InvalidParameterException: unsupported Kubernetes version
+│ {
+│   RespMetadata: {
+│     StatusCode: 400,
+│     RequestID: "64ba0a36-755a-4051-b2d1-cbcef6ae6361"
+│   },
+│   ClusterName: "devops-ninja-eks-SSSQrpuN",
+│   Message_: "unsupported Kubernetes version"
+│ }
+│ 
+│   with module.eks.aws_eks_cluster.this[0],
+│   on .terraform/modules/eks/main.tf line 11, in resource "aws_eks_cluster" "this":
+│   11: resource "aws_eks_cluster" "this" {
+│ 
+╵
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+Error: Terraform exited with code 1.
+Error: Process completed with exit code 1.
+~~~~
+
+
+
+
+
+
+- Ajustando
+github-actions-terraform-eks-traefik-app/eks/eks-cluster.tf
+de:
+cluster_version = "1.18"
+para:
+cluster_version = "1.21"
+
+
+
+
+git add .
+git commit -m "AULA 58. GitHub Actions - Terraform + EKS. TSHOOT, terraform apply"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
 
