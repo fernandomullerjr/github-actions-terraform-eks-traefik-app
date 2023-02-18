@@ -951,8 +951,6 @@ Error: Process completed with exit code 1.
 
 ~> 0.14
 
-
-
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -1004,8 +1002,9 @@ github-actions-terraform-eks-traefik-app/.github/workflows/eks.yaml
 Necessário testar pipeline.
 
 
+- Erro:
 
-
+~~~~bash
 Error: Unsupported Terraform Core version
 
   on .terraform/modules/eks/versions.tf line 2, in terraform:
@@ -1085,3 +1084,5 @@ Warning: The `set-output` command is deprecated and will be disabled soon. Pleas
 Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
 Error: Terraform exited with code 1.
 Error: Process completed with exit code 1.
+~~~~
+
