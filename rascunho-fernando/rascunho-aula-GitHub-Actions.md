@@ -1086,3 +1086,135 @@ Error: Terraform exited with code 1.
 Error: Process completed with exit code 1.
 ~~~~
 
+
+
+
+
+
+
+
+
+- Ajustando para
+  required_version = "1.0.5"
+
+
+
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
+
+
+
+
+
+
+- Erro:
+
+~~~~bash
+0s
+4s
+Run terraform plan -no-color
+/home/runner/work/_temp/478dd61f-cb07-434b-888b-db4a4d57620d/terraform-bin plan -no-color
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 5, in module "eks":
+   5:   subnets         = module.vpc.public_subnets
+
+An argument named "subnets" is not expected here.
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 14, in module "eks":
+  14:   workers_group_defaults = {
+
+An argument named "workers_group_defaults" is not expected here.
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 18, in module "eks":
+  18:   worker_groups = [
+
+An argument named "worker_groups" is not expected here.
+~~~~
+
+
+
+
+
+
+
+
+
+
+jabadia commented Jan 6, 2022
+
+I found a temporary workaround: fix the version of eks module. I guess version 18 recently released breaks this code.
+
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  version         = "17.24.0"
+  ...
+
+jonathanmeier5 and evolart reacted with thumbs up emoji
+
+
+
+
+
+- Adicionando no arquivo "github-actions-terraform-eks-traefik-app/eks/eks-cluster.tf":
+version = "17.24.0"
+
+
+
+
+~~~~bash
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt -h
+Usage: terraform [global options] fmt [options] [DIR]
+
+        Rewrites all Terraform configuration files to a canonical format. Both
+        configuration files (.tf) and variables files (.tfvars) are updated.
+        JSON files (.tf.json or .tfvars.json) are not modified.
+
+        If DIR is not specified then the current working directory will be used.
+        If DIR is "-" then content will be read from STDIN. The given content must
+        be in the Terraform language native syntax; JSON is not supported.
+
+Options:
+
+  -list=false    Don't list files whose formatting differs
+                 (always disabled if using STDIN)
+
+  -write=false   Don't write to source files
+                 (always disabled if using STDIN or -check)
+
+  -diff          Display diffs of formatting changes
+
+  -check         Check if the input is formatted. Exit status will be 0 if all
+                 input is properly formatted and non-zero otherwise.
+
+  -no-color      If specified, output won't contain any color.
+
+  -recursive     Also process files in subdirectories. By default, only the
+                 given directory (or current directory) is processed.
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt -recursive
+eks/eks-cluster.tf
+rascunho-fernando/eks-3.tf
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$
+~~~~
+
+
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
