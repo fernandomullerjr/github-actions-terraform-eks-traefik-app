@@ -947,14 +947,274 @@ Error: Process completed with exit code 1.
 
 
 
-
+- Testando a versão especifica no pipeline do Actions, para ele nao pegar a ultima versão do Terraform:
 
 ~> 0.14
-
-
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.0
+
+
+
+
+
+
+
+- PR com problemas, ficando em QUEUED os jobs, devido incidente no Github.
+
+
+
+# PENDENTE
+- PR com problemas, ficando em QUEUED os jobs, devido incidente no Github.
+- Ver sobre TERRAFORM VERSION.
+- Pegar versão especifica no pipeline do Actions, para ele nao pegar a ultima versão do Terraform:
+            with:
+              terraform_version: 0.14.0
+- PR com problemas, ficando em QUEUED os jobs, devido incidente no Github.
+- Tratar erros no Terraform Plan
+https://github.com/fernandomullerjr/github-actions-terraform-eks-traefik-app/pull/1/checks
+<https://github.com/fernandomullerjr/github-actions-terraform-eks-traefik-app/pull/1/checks>
+- Fazer merge da branch "teste-branch-1" com a branch "main", para triggar o apply do Terraform.
+- Video continua em:
+16:19h
+na criação do apply
+- Ver sobre commits e histórico no Profile, na cobrinha.
+
+
+
+
+
+
+~>: Allows only the rightmost version component to increment. For example, to allow new patch releases within a specific minor release, use the full version number: ~> 1.0.4 will allow installation of 1.0.5 and 1.0.10 but not 1.1.0. This is usually called the pessimistic constraint operator.
+
+
+
+
+
+
+Novo PR - Teste branch 1 - Ajustada version
+Modificada a version nos arquivos
+github-actions-terraform-eks-traefik-app/eks/versions.tf
+github-actions-terraform-eks-traefik-app/.github/workflows/eks.yaml
+Necessário testar pipeline.
+
+
+- Erro:
+
+~~~~bash
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks (from terraform-aws-modules/eks/aws) does not support
+Terraform version 0.14.0. To proceed, either choose another supported
+Terraform version or update this version constraint. Version constraints are
+normally set for good reason, so updating the constraint may lead to other
+errors or unexpected behavior.
+
+
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/modules/_user_data/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks.module.eks_managed_node_group.module.user_data (from
+../_user_data) does not support Terraform version 0.14.0. To proceed, either
+choose another supported Terraform version or update this version constraint.
+Version constraints are normally set for good reason, so updating the
+constraint may lead to other errors or unexpected behavior.
+
+
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/modules/_user_data/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks.module.self_managed_node_group.module.user_data (from
+../_user_data) does not support Terraform version 0.14.0. To proceed, either
+choose another supported Terraform version or update this version constraint.
+Version constraints are normally set for good reason, so updating the
+constraint may lead to other errors or unexpected behavior.
+
+
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/modules/eks-managed-node-group/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks.module.eks_managed_node_group (from
+./modules/eks-managed-node-group) does not support Terraform version 0.14.0.
+To proceed, either choose another supported Terraform version or update this
+version constraint. Version constraints are normally set for good reason, so
+updating the constraint may lead to other errors or unexpected behavior.
+
+
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/modules/fargate-profile/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks.module.fargate_profile (from ./modules/fargate-profile) does
+not support Terraform version 0.14.0. To proceed, either choose another
+supported Terraform version or update this version constraint. Version
+constraints are normally set for good reason, so updating the constraint may
+lead to other errors or unexpected behavior.
+
+
+Error: Unsupported Terraform Core version
+
+  on .terraform/modules/eks/modules/self-managed-node-group/versions.tf line 2, in terraform:
+   2:   required_version = ">= 1.0"
+
+Module module.eks.module.self_managed_node_group (from
+./modules/self-managed-node-group) does not support Terraform version 0.14.0.
+To proceed, either choose another supported Terraform version or update this
+version constraint. Version constraints are normally set for good reason, so
+updating the constraint may lead to other errors or unexpected behavior.
+
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+Error: Terraform exited with code 1.
+Error: Process completed with exit code 1.
+~~~~
+
+
+
+
+
+
+
+
+
+- Ajustando para
+  required_version = "1.0.5"
+
+
+
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
+
+
+
+
+
+
+- Erro:
+
+~~~~bash
+0s
+4s
+Run terraform plan -no-color
+/home/runner/work/_temp/478dd61f-cb07-434b-888b-db4a4d57620d/terraform-bin plan -no-color
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 5, in module "eks":
+   5:   subnets         = module.vpc.public_subnets
+
+An argument named "subnets" is not expected here.
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 14, in module "eks":
+  14:   workers_group_defaults = {
+
+An argument named "workers_group_defaults" is not expected here.
+
+Error: Unsupported argument
+
+  on eks-cluster.tf line 18, in module "eks":
+  18:   worker_groups = [
+
+An argument named "worker_groups" is not expected here.
+~~~~
+
+
+
+
+
+
+
+
+
+
+jabadia commented Jan 6, 2022
+
+I found a temporary workaround: fix the version of eks module. I guess version 18 recently released breaks this code.
+
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  version         = "17.24.0"
+  ...
+
+jonathanmeier5 and evolart reacted with thumbs up emoji
+
+
+
+
+
+- Adicionando no arquivo "github-actions-terraform-eks-traefik-app/eks/eks-cluster.tf":
+version = "17.24.0"
+
+
+
+
+~~~~bash
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt -h
+Usage: terraform [global options] fmt [options] [DIR]
+
+        Rewrites all Terraform configuration files to a canonical format. Both
+        configuration files (.tf) and variables files (.tfvars) are updated.
+        JSON files (.tf.json or .tfvars.json) are not modified.
+
+        If DIR is not specified then the current working directory will be used.
+        If DIR is "-" then content will be read from STDIN. The given content must
+        be in the Terraform language native syntax; JSON is not supported.
+
+Options:
+
+  -list=false    Don't list files whose formatting differs
+                 (always disabled if using STDIN)
+
+  -write=false   Don't write to source files
+                 (always disabled if using STDIN or -check)
+
+  -diff          Display diffs of formatting changes
+
+  -check         Check if the input is formatted. Exit status will be 0 if all
+                 input is properly formatted and non-zero otherwise.
+
+  -no-color      If specified, output won't contain any color.
+
+  -recursive     Also process files in subdirectories. By default, only the
+                 given directory (or current directory) is processed.
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$ terraform fmt -recursive
+eks/eks-cluster.tf
+rascunho-fernando/eks-3.tf
+fernando@debian10x64:~/cursos/terraform/github-actions-terraform-eks-traefik-app$
+~~~~
+
+
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
