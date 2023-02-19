@@ -988,7 +988,8 @@ na criação do apply
 
 
 
-
+- Fonte:
+<https://developer.hashicorp.com/terraform/language/expressions/version-constraints>
 
 ~>: Allows only the rightmost version component to increment. For example, to allow new patch releases within a specific minor release, use the full version number: ~> 1.0.4 will allow installation of 1.0.5 and 1.0.10 but not 1.1.0. This is usually called the pessimistic constraint operator.
 
@@ -1322,4 +1323,802 @@ git commit -m "AULA 58. GitHub Actions - Terraform + EKS. TSHOOT, terraform appl
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
+
+
+
+
+
+
+
+https://github.com/fernandomullerjr/github-actions-terraform-eks-traefik-app/pull/5
+
+Terraform Format and Style 🖌success
+Terraform Initialization ⚙️success
+Terraform Plan 📖success
+
+All checks have passed
+1 successful check
+@github-actions
+Terraform CI / Terraform (pull_request) Successful in 41s
+Details
+This branch has no conflicts with the base branch
+Merging can be performed automatically. 
+
+
+
+- Mergeando
+
+ Merge pull request #5 from fernandomullerjr/teste-branch-1 Terraform CI #26: Commit 98ec739 pushed by fernandomullerjr
+main
+February 18, 2023 19:14 Queued
+
+
+
+
+
+
+
+
+
+
+- Criando cluster EKS
+
+        },
+    ]
+  + kubectl_config      = (known after apply)
+module.eks.aws_eks_cluster.this[0]: Creating...
+module.eks.aws_eks_cluster.this[0]: Still creating... [10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m20s elapsed]
+
+
+
+
+- Erro
+
+~~~~bash
+rs[1]: Creation complete after 1s [id=devops-ninja-eks-SSSQrpuN20230218222436242400000002]
+module.eks.aws_iam_instance_profile.workers[0]: Creation complete after 1s [id=devops-ninja-eks-SSSQrpuN20230218222436243700000003]
+module.eks.aws_launch_configuration.workers[0]: Creating...
+module.eks.kubernetes_config_map.aws_auth[0]: Creating...
+module.eks.aws_launch_configuration.workers[1]: Creating...
+module.eks.kubernetes_config_map.aws_auth[0]: Creation complete after 0s [id=kube-system/aws-auth]
+module.eks.aws_launch_configuration.workers[1]: Creation complete after 10s [id=devops-ninja-eks-SSSQrpuN-worker-group-220230218222436921600000008]
+module.eks.aws_launch_configuration.workers[0]: Creation complete after 10s [id=devops-ninja-eks-SSSQrpuN-worker-group-120230218222436910700000007]
+module.eks.aws_autoscaling_group.workers[0]: Creating...
+module.eks.aws_autoscaling_group.workers[1]: Creating...
+╷
+│ Error: waiting for Auto Scaling Group (devops-ninja-eks-SSSQrpuN-worker-group-22023021822244694250000000a) capacity satisfied: 1 error occurred:
+│ 	* Scaling activity (4ea6199a-84fe-2a3c-41db-354193e680ac): Failed: Authentication Failure. Launching EC2 instance failed.
+│ 
+│ 
+│ 
+│   with module.eks.aws_autoscaling_group.workers[1],
+│   on .terraform/modules/eks/workers.tf line 3, in resource "aws_autoscaling_group" "workers":
+│    3: resource "aws_autoscaling_group" "workers" {
+│ 
+╵
+╷
+│ Error: waiting for Auto Scaling Group (devops-ninja-eks-SSSQrpuN-worker-group-120230218222446937500000009) capacity satisfied: 1 error occurred:
+│ 	* Scaling activity (13d6199a-8540-85cf-c08c-e034cfd38c4d): Failed: Authentication Failure. Launching EC2 instance failed.
+│ 
+│ 
+│ 
+│   with module.eks.aws_autoscaling_group.workers[0],
+│   on .terraform/modules/eks/workers.tf line 3, in resource "aws_autoscaling_group" "workers":
+│    3: resource "aws_autoscaling_group" "workers" {
+│ 
+╵
+~~~~
+
+
+
+Terraform Error: waiting for Auto Scaling Group  Failed: Authentication Failure. Launching EC2 instance failed. aws_autoscaling_group workers eks
+
+
+
+
+
+
+
+
+
+
+
+
+de:
+instance_type                 = "t3a.micro"
+para:
+instance_type                 = "t3.micro"
+
+
+
+
+
+
+
+
+
+
+- OK
+- Resolvido após dar re-run, o ASG estava custando a provisionar.
+- Saída completa do Terraform Apply que deu sucesso, após fazer re-run no Job, devido falha no ASG:
+
+~~~~bash
+##[debug]Evaluating: secrets.AWS_ACCESS_KEY_ID
+##[debug]Evaluating Index:
+##[debug]..Evaluating secrets:
+##[debug]..=> Object
+##[debug]..Evaluating String:
+##[debug]..=> 'AWS_ACCESS_KEY_ID'
+##[debug]=> '***'
+##[debug]Result: '***'
+##[debug]Evaluating: secrets.AWS_SECRET_ACCESS_KEY
+##[debug]Evaluating Index:
+##[debug]..Evaluating secrets:
+##[debug]..=> Object
+##[debug]..Evaluating String:
+##[debug]..=> 'AWS_SECRET_ACCESS_KEY'
+##[debug]=> '***'
+##[debug]Result: '***'
+##[debug]Evaluating condition for step: 'Terraform Apply'
+##[debug]Evaluating: (success() && (github.ref == 'refs/heads/main') && (github.event_name == 'push'))
+##[debug]Evaluating And:
+##[debug]..Evaluating success:
+##[debug]..=> true
+##[debug]..Evaluating Equal:
+##[debug]....Evaluating Index:
+##[debug]......Evaluating github:
+##[debug]......=> Object
+##[debug]......Evaluating String:
+##[debug]......=> 'ref'
+##[debug]....=> 'refs/heads/main'
+##[debug]....Evaluating String:
+##[debug]....=> 'refs/heads/main'
+##[debug]..=> true
+##[debug]..Evaluating Equal:
+##[debug]....Evaluating Index:
+##[debug]......Evaluating github:
+##[debug]......=> Object
+##[debug]......Evaluating String:
+##[debug]......=> 'event_name'
+##[debug]....=> 'push'
+##[debug]....Evaluating String:
+##[debug]....=> 'push'
+##[debug]..=> true
+##[debug]=> true
+##[debug]Expanded: (true && ('refs/heads/main' == 'refs/heads/main') && ('push' == 'push'))
+##[debug]Result: true
+##[debug]Starting: Terraform Apply
+##[debug]Loading inputs
+##[debug]Loading env
+Run terraform apply -auto-approve
+##[debug]      "mapUsers" = <<-EOT
+##[debug]      []
+##[debug]      
+##[debug]      EOT
+##[debug]    })
+##[debug]    "id" = "kube-system/aws-auth"
+##[debug]    "immutable" = false
+##[debug]    "metadata" = tolist([
+##[debug]      {
+##[debug]        "annotations" = tomap({})
+##[debug]        "generate_name" = ""
+##[debug]        "generation" = 0
+##[debug]        "labels" = tomap({
+##[debug]          "app.kubernetes.io/managed-by" = "Terraform"
+##[debug]          "terraform.io/module" = "terraform-aws-modules.eks.aws"
+##[debug]        })
+##[debug]        "name" = "aws-auth"
+##[debug]        "namespace" = "kube-system"
+##[debug]        "resource_version" = "902"
+##[debug]        "uid" = "16c4a60a-058a-4772-bca7-a10eac7f5786"
+##[debug]      },
+##[debug]    ])
+##[debug]  },
+##[debug]]
+##[debug]kubectl_config = <<EOT
+##[debug]apiVersion: v1
+##[debug]preferences: {}
+##[debug]kind: Config
+##[debug]
+##[debug]clusters:
+##[debug]- cluster:
+##[debug]    server: https://5C21DF7350A6C37787AE5C231BF1B2A5.gr7.us-east-2.eks.amazonaws.com
+##[debug]    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJek1ESXhPREl5TWpFd01Wb1hEVE16TURJeE5USXlNakV3TVZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTHc5Cjhnbm1qZU0yN1JSZGlIZkZUTTZzcDdZazBwTDlPaHhTZnN3UGlIVk8xUm9kK3IxL2o0RG1lMlFWMUR5Q0gvU2kKRkQrOERPZDN1bmR6TlFudG9sREtuMGNwQlgzVWZpOUo4WHJzREdxc0VvR3J5dXFKK2Q1ZlRvSWUxTU9Ta1dPTgp2RUg3TDNMVXllYlRwSHpkNk14VzFxeUJueENrb242SHRyaVNLL2FMU1FjVzduRFVZQ09KQ1hoRFNYa0xKT3Y3CndrejJEUWg5STJxV0NoRzlNK1dlZTlwdk9XSVVUd0t5aUNTaEp2eEZXWGJUOTRFZFA3bnppbVE4TVVMZCttU0sKNGFQZXRwRFVDY3U2dnpIQnFsTmdaOHRzTmdGSjY1aHFPN0dYa2t5Y25wYWxtYWVkaG5sRllhNHV4RWREM25nQQoxaVI0VTJhVXNSNGNkUnRSejhVQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZDbWxQaHhBZkpuTXpuOTZRSm9WRGJ5RS9pRG5NQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFCZ3VQZlY0NFg5VXk1SEUzZGVOczNHWURzaERYcVE2V0RPRlJXSzFBKy9CbVRCNGJLbgp2YkdrR2VPMVRQUktrSzc1eUFvMkhnZEl1M0lSeVdvMXpzcjdXNHQ2L1hFQnl4OXg3MjFHbVpuQkV2T1hHZnJRCkFOcW1UUGVxR1pmeHExZGRoVTlTWFRMT1FKNzZ2TmJ4cERsRFJyUTBlSEQ3Ui9RTDh4YUIyZ2loQlkweEZReDMKaTJBUWFRdUVhclhkVVBuL0JWekhDQWduOUJ5anRHN0tQcUkzbTlObmlPdjI4OEZzbityT29NaTNTTEpxZjdKNwp2MFRZdm1kUXJrZHkvNVZhZk1GUXFGSHBaZzNtNndnZ0pGaDJYWEJJcEE4QWZKMUxWZGtKQytndkJnOFR0SFVjCmROT1pGUnNsK0JXWEFYdmNQciszQ1BiYWdIVTUvb1h0ekZFTAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+##[debug]  name: eks_devops-ninja-eks-SSSQrpuN
+##[debug]
+##[debug]contexts:
+##[debug]- context:
+##[debug]    cluster: eks_devops-ninja-eks-SSSQrpuN
+##[debug]    user: eks_devops-ninja-eks-SSSQrpuN
+##[debug]  name: eks_devops-ninja-eks-SSSQrpuN
+##[debug]
+##[debug]current-context: eks_devops-ninja-eks-SSSQrpuN
+##[debug]
+##[debug]users:
+##[debug]- name: eks_devops-ninja-eks-SSSQrpuN
+##[debug]  user:
+##[debug]    exec:
+##[debug]      apiVersion: client.authentication.k8s.io/v1alpha1
+##[debug]      command: aws-iam-authenticator
+##[debug]      args:
+##[debug]        - "token"
+##[debug]        - "-i"
+##[debug]        - "devops-ninja-eks-SSSQrpuN"
+##[debug]
+##[debug]EOT
+##[debug]region = "us-east-2"
+##[debug]'
+
+::set-output name=stderr::
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+##[debug]=''
+
+::set-output name=exitcode::0
+Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+##[debug]='0'
+##[debug]Finishing: Terraform Apply
+~~~~
+
+
+
+
+
+
+
+
+
+
+
+- Depois disto, o Terraform fez o destroy de 2 ASG e deixou apenas os 2 ASG novos:
+
+Auto Scaling groups (2)Info
+
+	
+Name
+	
+Launch template/configuration
+	
+Instances
+	
+Status
+	
+Desired capacity
+	
+Min
+	
+Max
+	
+Availability Zones
+	
+devops-ninja-eks-SSSQrpuN-worker-group-220230218224301411900000001
+	devops-ninja-eks-SSSQrpuN-worker-group-220230218222436921600000008	1	-	1	1	3	us-east-2a, us-east-2b, us-east-2c
+	
+devops-ninja-eks-SSSQrpuN-worker-group-120230218224301424100000002
+	devops-ninja-eks-SSSQrpuN-worker-group-120230218222436910700000007	1	-	1	1	3	us-east-2a, us-east-2b, us-east-2c
+
+
+
+
+
+
+
+
+# PENDENTE
+- Ver sobre o State, como fazer o destroy e tudo mais.
+- Fazer KB.
+
+
+
+
+
+
+
+
+
+
+# Conectar ao cluster
+
+```sh
+
+$ aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
+
+```
+
+
+https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+
+Pegar o kubeconfig
+```sh
+$ aws sts get-caller-identity
+
+$ aws eks --region us-east-2 update-kubeconfig --name <NOME_CLUSTER>
+
+$ cat ~/.kube/config
+```
+
+
+
+aws eks --region us-east-2 update-kubeconfig --name devops-ninja-eks-SSSQrpuN
+
+
+
+
+- Pods em pending:
+
+~~~~bash
+fernando@debian10x64:~$ aws eks --region us-east-2 update-kubeconfig --name devops-ninja-eks-SSSQrpuN
+Added new context arn:aws:eks:us-east-2:261106957109:cluster/devops-ninja-eks-SSSQrpuN to /home/fernando/.kube/config
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get pods
+No resources found in default namespace.
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                      READY   STATUS    RESTARTS   AGE
+kube-system   coredns-f47955f89-pbz6b   0/1     Pending   0          34m
+kube-system   coredns-f47955f89-wrs77   0/1     Pending   0          34m
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get nodes
+No resources found
+fernando@debian10x64:~$ kubectl get nodes -A
+No resources found
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ kubectl get all -A
+NAMESPACE     NAME                          READY   STATUS    RESTARTS   AGE
+kube-system   pod/coredns-f47955f89-pbz6b   0/1     Pending   0          35m
+kube-system   pod/coredns-f47955f89-wrs77   0/1     Pending   0          35m
+
+NAMESPACE     NAME                 TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)         AGE
+default       service/kubernetes   ClusterIP   172.20.0.1    <none>        443/TCP         36m
+kube-system   service/kube-dns     ClusterIP   172.20.0.10   <none>        53/UDP,53/TCP   35m
+
+NAMESPACE     NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+kube-system   daemonset.apps/aws-node     0         0         0       0            0           <none>          35m
+kube-system   daemonset.apps/kube-proxy   0         0         0       0            0           <none>          35m
+
+NAMESPACE     NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   deployment.apps/coredns   0/2     2            0           35m
+
+NAMESPACE     NAME                                DESIRED   CURRENT   READY   AGE
+kube-system   replicaset.apps/coredns-f47955f89   2         2         0       35m
+fernando@debian10x64:~$
+~~~~
+
+
+
+
+
+
+
+- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups.
+
+
+
+
+
+
+
+# PENDENTE
+
+
+# PENDENTE
+- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT.
+    https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
+- Ver sobre o State, como fazer o destroy e tudo mais.
+- Fazer KB. Sobre o "~>". Sobre os versions do Terraform, EKS module, Github Actions Terraform version.
+    https://developer.hashicorp.com/terraform/language/expressions/version-constraints
+    https://github.com/hashicorp/learn-terraform-provision-eks-cluster/issues/53
+    https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/17.24.0
+
+
+
+
+
+
+- Criando via Console
+Criação do grupo de nós em andamento
+node-group-teste-1 está sendo criado. Esse processo pode levar vários minutos.
+
+
+
+Status
+Criando
+
+
+
+
+
+- ERRO verificado via Console:
+
+Seu usuário ou função atual não tem acesso a objetos do Kubernetes neste cluster do EKS nodegroup
+Isso pode ocorrer porque o usuário ou a função atual não tem permissões RBAC do Kubernetes para descrever recursos de cluster ou não tem uma entrada no mapa de configuração de autenticação do cluster.Saiba mais 
+
+
+
+
+kubectl describe configmap -n kube-system aws-auth
+
+~~~~bash
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl describe configmap aws-auth
+Error from server (NotFound): configmaps "aws-auth" not found
+fernando@debian10x64:~$ kubectl describe configmap aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=Terraform
+              terraform.io/module=terraform-aws-modules.eks.aws
+Annotations:  <none>
+
+Data
+====
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218222435567700000001"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+
+mapUsers:
+----
+[]
+
+mapAccounts:
+----
+[]
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$
+~~~~
+
+
+
+
+
+
+
+- EXEMPLO:
+
+apiVersion: v1
+data:
+mapRoles: |
+  - groups:
+    - eks-console-dashboard-full-access-group
+    rolearn: arn:aws:iam::111122223333:role/my-console-viewer-role
+    username: my-console-viewer-role        
+mapUsers: |
+  - groups:
+    - eks-console-dashboard-restricted-access-group
+    userarn: arn:aws:iam::111122223333:user/my-user
+    username: my-user
+
+Important
+
+The role ARN can't include a path such as role/my-team/developers/my-console-viewer-role. The format of the ARN must be arn:aws:iam::111122223333:role/my-console-viewer-role. In this example, my-team/developers/ needs to be removed.
+
+
+
+
+
+- EXEMPLO 2:
+
+apiVersion: v1
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::123456789012:role/EKS-WorkerNodes-NodeInstanceRole-1R46GDBD928V5
+      username: system:node:{{EC2PrivateDNSName}}
+      groups: 
+        - system:bootstrappers
+        - system:nodes
+  mapUsers: |
+    - userarn: arn:aws:iam::123456789012:user/Alice
+      username: alice
+      groups: 
+        - system:masters
+    - userarn: arn:aws:iam::123456789012:group/eks-admin
+      username: eks-admin
+      groups: 
+        - system:masters
+
+
+
+
+
+kubectl edit configmap -n kube-system aws-auth
+
+  mapUsers: |
+    - userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+      username: fernandomullerjr8596
+      groups: 
+        - system:masters
+
+
+
+fernando@debian10x64:~$ kubectl edit configmap -n kube-system aws-auth
+configmap/aws-auth edited
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ date
+Sat 18 Feb 2023 08:30:08 PM -03
+fernando@debian10x64:~$
+
+
+
+fernando@debian10x64:~$ kubectl describe configmap aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=Terraform
+              terraform.io/module=terraform-aws-modules.eks.aws
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218222435567700000001"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+
+mapUsers:
+----
+- userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+  username: fernandomullerjr8596
+  groups:
+    - system:masters
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+- Comparando
+IAM:
+arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218215142661500000001
+Configmap:
+"rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218222435567700000001"
+
+
+
+
+
+
+kubectl edit configmap -n kube-system aws-auth
+
+    - rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218215142661500000001
+      username: system:node:{{EC2PrivateDNSName}}
+      groups: 
+        - system:bootstrappers
+        - system:nodes
+        - system:masters
+
+
+
+fernando@debian10x64:~$ kubectl edit configmap -n kube-system aws-auth
+configmap/aws-auth edited
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl describe configmap aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=Terraform
+              terraform.io/module=terraform-aws-modules.eks.aws
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218222435567700000001"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+- rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218215142661500000001
+  username: system:node:{{EC2PrivateDNSName}}
+  groups:
+    - system:bootstrappers
+    - system:nodes
+    - system:masters
+
+mapUsers:
+----
+- userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+  username: fernandomullerjr8596
+  groups:
+    - system:masters
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$ date
+Sat 18 Feb 2023 08:33:54 PM -03
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map
+
+
+
+- Idéia
+
+https://veducate.co.uk/aws-console-permission-eks-cluster/
+<https://veducate.co.uk/aws-console-permission-eks-cluster/>
+
+kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-console-full-access.yaml
+
+fernando@debian10x64:~$ kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-console-full-access.yaml
+clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created
+clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created
+fernando@debian10x64:~$
+
+
+
+
+kubectl edit configmap/aws-auth -n kube-system
+
+
+
+Add in the following under the data tree:
+
+  mapUsers: |
+    - userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+      username: admin
+      groups:
+        - system:masters
+
+
+
+fernando@debian10x64:~$ kubectl edit configmap/aws-auth -n kube-system
+configmap/aws-auth edited
+fernando@debian10x64:~$ date
+Sat 18 Feb 2023 09:05:55 PM -03
+fernando@debian10x64:~$ kubectl describe configmap/aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=Terraform
+              terraform.io/module=terraform-aws-modules.eks.aws
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218222435567700000001"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+- rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-SSSQrpuN20230218215142661500000001
+  username: system:node:{{EC2PrivateDNSName}}
+  groups:
+    - system:bootstrappers
+    - system:nodes
+    - system:masters
+
+mapUsers:
+----
+- userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+  username: admin
+  groups:
+    - system:masters
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$
+
+
+
+
+
+- Erro continua
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Learn more 
+The Co
+
+
+
+
+
+- Testando
+kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/eks/kubernetes-dashboard-admin.rbac.yaml
+kubectl edit configmap/aws-auth -n kube-system
+
+fernando@debian10x64:~$ kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/eks/kubernetes-dashboard-admin.rbac.yaml
+serviceaccount/admin-user created
+clusterrolebinding.rbac.authorization.k8s.io/admin-user created
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ kubectl edit configmap/aws-auth -n kube-system
+configmap/aws-auth edited
+fernando@debian10x64:~$
+
+
+
+
+
+# PENDENTE
+- Pegar ajuda/suporte do Baraldi.
+- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT .
+    https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+- Ver sobre o State, como fazer o destroy e tudo mais.
+- Tratar erro da console do EKS:
+    "Seu usuário ou função atual não tem acesso a objetos do Kubernetes neste cluster do EKS cluster.
+    Isso pode ocorrer porque o usuário ou a função atual não tem permissões RBAC do Kubernetes para descrever recursos de cluster ou não tem uma entrada no mapa de configuração de autenticação do cluster."
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+- Fazer KB. Sobre o "~>". Sobre os versions do Terraform, EKS module, Github Actions Terraform version.
+    https://developer.hashicorp.com/terraform/language/expressions/version-constraints
+    https://github.com/hashicorp/learn-terraform-provision-eks-cluster/issues/53
+    https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/17.24.0
+
+
+
+
+
+
+
 
