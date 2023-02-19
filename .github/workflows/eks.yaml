@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - branch-destruidora
     paths:
       - eks/**
   
@@ -96,4 +97,11 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        
+
+    - name: Terraform Destroy
+      if: github.ref == 'refs/heads/branch-destruidora' && github.event_name == 'push'
+      run: terraform destroy -auto-approve
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
