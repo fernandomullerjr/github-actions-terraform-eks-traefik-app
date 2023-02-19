@@ -2100,6 +2100,81 @@ fernando@debian10x64:~$
 
 
 
+- Criada a branch chamada
+branch-destruidora
+
+    - name: Terraform Destroy
+      if: github.ref == 'refs/heads/branch-destruidora' && github.event_name == 'push'
+      run: terraform destroy -auto-approve
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
+
+
+github-actions bot commented Feb 18, 2023
+Terraform Format and Style 🖌success
+Terraform Initialization ⚙️success
+Terraform Plan 📖success
+Show Plan
+
+Pusher: @fernandomullerjr, Action: pull_request
+
+All checks have passed
+1 successful check
+@github-actions
+Terraform CI / Terraform (pull_request) Successful in 38s
+Details
+This branch has no conflicts with the base branch
+Merging can be performed automatically. 
+
+
+
+
+Merge pull request #6 from fernandomullerjr/teste-branch-1
+Teste branch 1 com a branch-destruidora
+
+
+- Não triggou o destroy
+
+
+
+
+
+
+
+
+- AJUSTANDO
+
+
+on:
+  
+  push:
+    branches:
+      - main
+      - branch-destruidora
+
+git add .
+git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+
+
+
+
+
+
+
 # PENDENTE
 - Pegar ajuda/suporte do Baraldi.
 - Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT .
