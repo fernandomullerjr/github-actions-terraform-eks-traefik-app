@@ -35,7 +35,7 @@ module "eks" {
   ]
 }
 
-#comentario teste - alteração
+#comentario teste - alteração - 19/02/2023
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }

@@ -1,14 +1,16 @@
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------
+
 ## Git - commit - resumo
 
+git status
 git add .
 git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
-
+git status
 
 
 
@@ -23,7 +25,7 @@ git push
 - Criar bucket no S3 na mesma região que o projeto. Ajustar o manifesto de providers, colocando este bucket.
 - Criar 1 Token no Github, para uso no "actions/github-script@0.9.0". 
 - Habilitar permissões dos Actions nas settings do repositório. Marcar "Workflows have read and write permissions in the repository for all scopes."
-
+- DESTROY, criei uma branch chamada "branch-destruidora", que ao receber um merge ela trigga o destroy.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -2151,10 +2153,13 @@ Teste branch 1 com a branch-destruidora
 
 
 
+- Erro continua
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Learn more
 
 
 - AJUSTANDO
-
+criando condition para destroy do Cluster EKS via pipeline.
 
 on:
   
@@ -2163,32 +2168,163 @@ on:
       - main
       - branch-destruidora
 
+
+git status
 git add .
 git commit -m "CURSO devops-mao-na-massa-docker-kubernetes-rancher --- AULA 58. GitHub Actions - Terraform + EKS"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
+git status
 
 
 
 
+github-actions bot commented Feb 18, 2023
+Terraform Format and Style 🖌success
+Terraform Initialization ⚙️success
+Terraform Plan 📖success
+Show Plan
+
+Pusher: @fernandomullerjr, Action: pull_request
+
+
+All checks have passed
+1 successful check
+@github-actions
+Terraform CI / Terraform (pull_request) Successful in 33s
+Details
+This branch has no conflicts with the base branch
+Merging can be performed automatically. 
+
+
+
+ Merge pull request #7 from fernandomullerjr/teste-branch-1 Terraform CI #29: Commit 3cbee36 pushed by fernandomullerjr
+branch-destruidora 
+
+
+
+
+
+Deleting NODE GROUP
+
+
+0s
+Started at 1676766532000
+module.vpc.aws_internet_gateway.this[0]: Still destroying... [id=igw-0b07f6385db955545, 6m0s elapsed]
+module.vpc.aws_internet_gateway.this[0]: Still destroying... [id=igw-0b07f6385db955545, 6m10s elapsed]
+module.vpc.aws_internet_gateway.this[0]: Still destroying... [id=igw-0b07f6385db955545, 6m20s elapsed]
+
+
+
+module.vpc.aws_internet_gateway.this[0]: Still destroying... [id=igw-0b07f6385db955545, 6m30s elapsed]
+module.vpc.aws_internet_gateway.this[0]: Destruction complete after 6m38s
+╷
+│ Error: deleting EKS Cluster (devops-ninja-eks-SSSQrpuN): ResourceInUseException: Cluster has nodegroups attached
+│ {
+│   RespMetadata: {
+│     StatusCode: 409,
+│     RequestID: "1922a2cc-1106-47cb-96b1-eda9a7a36844"
+│   },
+│   ClusterName: "devops-ninja-eks-SSSQrpuN",
+│   Message_: "Cluster has nodegroups attached",
+│   NodegroupName: "node-group-teste-1"
+│ }
+│ 
+│ 
+╵
+
+
+
+
+
+
+
+
+
+- destruidos
+
+                - "token"
+                - "-i"
+                - "devops-ninja-eks-SSSQrpuN"
+    EOT -> null
+  - region                    = "us-east-2" -> null
+module.eks.aws_eks_cluster.this[0]: Destroying... [id=devops-ninja-eks-SSSQrpuN]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 1m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 1m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=devops-ninja-eks-SSSQrpuN, 1m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Destruction complete after 1m24s
+module.eks.aws_security_group_rule.cluster_https_worker_ingress[0]: Destroying... [id=sgrule-3551837232]
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-01c93e0c77b884900]
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy[0]: Destroying... [id=devops-ninja-eks-SSSQrpuN20230218215142661500000001-20230218215143422000000005]
+module.vpc.aws_subnet.public[2]: Destroying... [id=subnet-0ee1fa147a5facd17]
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy[0]: Destroying... [id=devops-ninja-eks-SSSQrpuN20230218215142661500000001-20230218215143522900000007]
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSVPCResourceControllerPolicy[0]: Destroying... [id=devops-ninja-eks-SSSQrpuN20230218215142661500000001-20230218215143539300000008]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-0fd1907e73600a101]
+module.eks.aws_security_group_rule.cluster_egress_internet[0]: Destroying... [id=sgrule-470887055]
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSVPCResourceControllerPolicy[0]: Destruction complete after 0s
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy[0]: Destruction complete after 0s
+module.eks.aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy[0]: Destruction complete after 0s
+module.eks.aws_iam_role.cluster[0]: Destroying... [id=devops-ninja-eks-SSSQrpuN20230218215142661500000001]
+module.eks.aws_iam_role.cluster[0]: Destruction complete after 0s
+module.vpc.aws_subnet.public[2]: Destruction complete after 0s
+module.vpc.aws_subnet.public[0]: Destruction complete after 0s
+module.eks.aws_security_group_rule.cluster_https_worker_ingress[0]: Destruction complete after 0s
+module.eks.aws_security_group.workers[0]: Destroying... [id=sg-0663727d343a9f66d]
+module.vpc.aws_subnet.public[1]: Destruction complete after 0s
+module.eks.aws_security_group_rule.cluster_egress_internet[0]: Destruction complete after 0s
+module.eks.aws_security_group.cluster[0]: Destroying... [id=sg-047399f5e0e3c0681]
+module.eks.aws_security_group.workers[0]: Destruction complete after 1s
+module.eks.aws_security_group.cluster[0]: Destruction complete after 1s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-0bf3fb417cc06c090]
+module.vpc.aws_vpc.this[0]: Destruction complete after 0s
+random_string.suffix: Destroying... [id=SSSQrpuN]
+random_string.suffix: Destruction complete after 0s
+
+Destroy complete! Resources: 14 destroyed.
+::debug::Terraform exited with code 0.
+
+
+
+
+
+
+
+- Outro dia:
+    tentar:
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    tentar-2:
+    https://varlogdiego.com/eks-your-current-user-or-role-does-not-have-access-to-kubernetes
 
 
 
 # PENDENTE
 - Pegar ajuda/suporte do Baraldi.
-- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT .
+- Tratar erro da console do EKS:
+    Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Learn more
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    tentar:
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    tentar-2:
+    https://varlogdiego.com/eks-your-current-user-or-role-does-not-have-access-to-kubernetes
+    PERGUNTA: https://www.udemy.com/course/devops-mao-na-massa-docker-kubernetes-rancher/learn/lecture/25888594#questions/19247906
+- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT, porque o cluster EKS não adiciona os workers/node-groups.
     https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
     https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
 - Ver sobre o State, como fazer o destroy e tudo mais.
-- Tratar erro da console do EKS:
-    "Seu usuário ou função atual não tem acesso a objetos do Kubernetes neste cluster do EKS cluster.
-    Isso pode ocorrer porque o usuário ou a função atual não tem permissões RBAC do Kubernetes para descrever recursos de cluster ou não tem uma entrada no mapa de configuração de autenticação do cluster."
-    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    Criado step que faz o destroy via Pipeline.
+    ver como utilizar o State do S3 localmente. Alternar version do TF???
 - Fazer KB. Sobre o "~>". Sobre os versions do Terraform, EKS module, Github Actions Terraform version.
     https://developer.hashicorp.com/terraform/language/expressions/version-constraints
     https://github.com/hashicorp/learn-terraform-provision-eks-cluster/issues/53
     https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/17.24.0
+- Billing, acompanhar.
 
 
 
@@ -2196,4 +2332,16 @@ git push
 
 
 
+# Dia 19/02/2023
 
+Domingo - 19:12h
+
+
+
+git status
+git add .
+git commit -m "AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+git status
