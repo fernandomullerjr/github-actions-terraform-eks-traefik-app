@@ -2332,3 +2332,16 @@ Destroy complete! Resources: 14 destroyed.
 
 
 
+# Dia 19/02/2023
+
+Domingo - 19:12h
+
+
+
+git status
+git add .
+git commit -m "AULA 58. GitHub Actions - Terraform + EKS"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+git status
