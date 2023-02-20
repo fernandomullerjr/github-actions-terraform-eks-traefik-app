@@ -27,6 +27,10 @@ git status
 - Habilitar permissões dos Actions nas settings do repositório. Marcar "Workflows have read and write permissions in the repository for all scopes."
 - DESTROY, criei uma branch chamada "branch-destruidora", que ao receber um merge ela trigga o destroy.
 
+- Comandos:
+kubectl edit configmap/aws-auth -n kube-system
+kubectl describe configmap/aws-auth -n kube-system
+
 -----------------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------
 ## AWS Keys
@@ -2317,6 +2321,7 @@ Destroy complete! Resources: 14 destroyed.
 - Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT, porque o cluster EKS não adiciona os workers/node-groups.
     https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
     https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+- RBAC, ver como fazer para o Terraform criar os Maps para os usuarios que irão utilizar o Cluster EKS.
 - Ver sobre o State, como fazer o destroy e tudo mais.
     Criado step que faz o destroy via Pipeline.
     ver como utilizar o State do S3 localmente. Alternar version do TF???
@@ -2345,3 +2350,384 @@ eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
 git status
+
+
+Merge da branch Teste branch 1 com a main - Dia 19/02/2023
+Para efetuar o apply do Terraform e criar o cluster EKS.
+
+
+
+
+https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+
+Pegar o kubeconfig
+```sh
+$ aws sts get-caller-identity
+
+$ aws eks --region us-east-2 update-kubeconfig --name <NOME_CLUSTER>
+
+$ cat ~/.kube/config
+```
+
+
+
+aws eks --region us-east-2 update-kubeconfig --name devops-ninja-eks-W3ZnsTEB
+
+
+
+- Pods em Pending
+
+~~~~bash
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                      READY   STATUS    RESTARTS   AGE
+kube-system   coredns-f47955f89-2dqfg   0/1     Pending   0          4m36s
+kube-system   coredns-f47955f89-5bhqm   0/1     Pending   0          4m36s
+fernando@debian10x64:~$ date
+Sun 19 Feb 2023 07:26:54 PM -03
+fernando@debian10x64:~$
+~~~~
+
+
+- Novamente com os 2 problemas:
+1. Console acusando usuario ou role com pouca permissão.
+2. Nodes são criados(EC2), mas não são atrelados aos node groups do EKS.
+
+
+
+
+fernando@debian10x64:~$ aws sts get-caller-identity --query Arn
+"arn:aws:iam::261106957109:user/fernandomullerjr8596"
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl describe configmap/aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=Terraform
+              terraform.io/module=terraform-aws-modules.eks.aws
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/devops-ninja-eks-W3ZnsTEB2023021922241472240000000f"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+
+mapUsers:
+----
+[]
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$ ^C
+
+
+
+To edit the aws-auth ConfigMap in the text editor as the cluster creator or admin, run the following command:
+
+$ kubectl edit configmap aws-auth -n kube-system
+
+4.   Add an IAM user or role:
+
+mapUsers: |
+  - userarn: arn:aws:iam::XXXXXXXXXXXX:user/testuser
+    username: testuser
+    groups:
+    - system:bootstrappers
+    - system:nodes
+
+
+
+
+
+
+
+
+kubectl edit configmap aws-auth -n kube-system
+
+  mapUsers: |
+    - userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+      username: fernandomullerjr8596
+      groups:
+      - system:bootstrappers
+      - system:nodes
+      - system:masters
+
+
+
+
+
+
+
+
+
+
+
+
+  mapRoles: |
+    - rolearn: arn:aws:iam::123456789:role/developers
+      username: developers
+      groups:
+        - eks-console
+    - rolearn: arn:aws:iam::123456789:role/devops
+      username: devops
+      groups:
+        - system:masters
+
+
+
+
+
+
+  mapRoles: |
+    - rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-W3ZnsTEB2023021922241472240000000f
+      username: devops-ninja-eks-W3ZnsTEB2023021922241472240000000f
+      groups:
+        - system:masters
+    - rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-W3ZnsTEB20230219221531008900000002
+      username: devops-ninja-eks-W3ZnsTEB20230219221531008900000002
+      groups:
+        - system:masters
+
+
+
+
+fernando@debian10x64:~$ kubectl edit configmap aws-auth -n kube-system
+configmap/aws-auth edited
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ date
+Sun 19 Feb 2023 07:43:38 PM -03
+fernando@debian10x64:~$
+
+
+
+19:48h
+
+
+
+
+
+
+
+kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-console-full-access.yaml
+
+
+fernando@debian10x64:~$ kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-console-full-access.yaml
+clusterrole.rbac.authorization.k8s.io/eks-console-dashboard-full-access-clusterrole created
+clusterrolebinding.rbac.authorization.k8s.io/eks-console-dashboard-full-access-binding created
+fernando@debian10x64:~$
+
+
+
+fernando@debian10x64:~$ kubectl get clusterrole -A | grep -i console
+eks-console-dashboard-full-access-clusterrole                          2023-02-19T22:56:22Z
+fernando@debian10x64:~$ date
+Sun 19 Feb 2023 07:56:33 PM -03
+fernando@debian10x64:~$
+
+
+
+
+
+kubectl edit configmap aws-auth -n kube-system
+
+  mapUsers: |
+    - userarn: arn:aws:iam::261106957109:user/fernandomullerjr8596
+      username: fernandomullerjr8596
+      groups:
+      - system:bootstrappers
+      - system:nodes
+      - system:masters
+      - eks-console-dashboard-full-access-group
+  mapRoles: |
+    - rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-W3ZnsTEB2023021922241472240000000f
+      username: "system:node:{{EC2PrivateDNSName}}"
+      groups:
+        - system:masters
+        - eks-console-dashboard-full-access-group
+    - rolearn: arn:aws:iam::261106957109:role/devops-ninja-eks-W3ZnsTEB20230219221531008900000002
+      username: "system:node:{{EC2PrivateDNSName}}"
+      groups:
+        - system:masters
+        - eks-console-dashboard-full-access-group
+
+
+
+fernando@debian10x64:~$ kubectl edit configmap aws-auth -n kube-system
+configmap/aws-auth edited
+fernando@debian10x64:~$ date
+Sun 19 Feb 2023 07:58:17 PM -03
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+
+
+
+https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+https://docs.aws.amazon.com/eks/latest/userguide/connector_IAM_role.html
+AmazonEKSConnectorAgentRole
+The policy AmazonEKSConnectorAgentPolicy has been created.
+Role AmazonEKSConnectorAgentRole created.
+
+
+https://docs.aws.amazon.com/eks/latest/userguide/connector-grant-access.html
+kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-connector-clusterrole_V2.yaml
+
+fernando@debian10x64:~$ kubectl apply -f /home/fernando/cursos/terraform/github-actions-terraform-eks-traefik-app/rascunho-fernando/eks-connector-clusterrole_V2.yaml
+clusterrolebinding.rbac.authorization.k8s.io/eks-connector-service created
+clusterrole.rbac.authorization.k8s.io/eks-connector-service created
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+https://aws-ia.github.io/terraform-aws-eks-blueprints/v4.24.0/node-groups/
+Additional IAM Roles, Users and Accounts¶
+
+Access to EKS cluster using AWS IAM entities is enabled by the AWS IAM Authenticator for Kubernetes, which runs on the Amazon EKS control plane. The authenticator gets its configuration information from the aws-auth ConfigMap.
+
+The following config grants additional AWS IAM users or roles the ability to interact with your cluster. However, the best practice is to leverage soft-multitenancy with the help of Teams module. Teams feature helps to manage users with dedicated namespaces, RBAC, IAM roles and register users with aws-auth to provide access to the EKS Cluster.
+
+The below example demonstrates adding additional IAM Roles, IAM Users and Accounts using EKS Blueprints module
+
+~~~~h
+module "eks_blueprints" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints"
+
+  # EKS CLUSTER
+  cluster_version    = "1.21"                                         # EKS Cluster Version
+  vpc_id             = "<vpcid>"                                      # Enter VPC ID
+  private_subnet_ids = ["<subnet-a>", "<subnet-b>", "<subnet-c>"]     # Enter Private Subnet IDs
+
+  # List of map_roles
+  map_roles          = [
+    {
+      rolearn  = "arn:aws:iam::<aws-account-id>:role/<role-name>"     # The ARN of the IAM role
+      username = "ops-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+  # List of map_users
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::<aws-account-id>:user/<username>"      # The ARN of the IAM user to add.
+      username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+  map_accounts = ["123456789", "9876543321"]                          # List of AWS account ids
+}
+
+~~~~
+
+
+
+
+
+
+
+# PENDENTE
+- Pegar ajuda/suporte do Baraldi.
+- Tratar erro da console do EKS:
+    Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Learn more
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    tentar:
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    tentar-2:
+    https://varlogdiego.com/eks-your-current-user-or-role-does-not-have-access-to-kubernetes
+    PERGUNTA: https://www.udemy.com/course/devops-mao-na-massa-docker-kubernetes-rancher/learn/lecture/25888594#questions/19247906
+    Fazer o "map_roles" e "map_users" via TF, antes?
+    Tentar-3:
+    https://nextlinklabs.com/resources/insights/handling-authentication-in-eks-clusters-kubernetes-aws-iam
+- Exemplos, ver os manifestos de exemplo do curso 50-exemplos:
+    https://github.com/stacksimplify/terraform-on-aws-eks
+    <https://github.com/stacksimplify/terraform-on-aws-eks>
+    https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/08-AWS-EKS-Cluster-Basics
+    <https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/08-AWS-EKS-Cluster-Basics>
+- Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT, porque o cluster EKS não adiciona os workers/node-groups.
+    https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
+    https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
+    ver sobre os Self-managed group, Managed-group, etc
+    https://aws-ia.github.io/terraform-aws-eks-blueprints/v4.24.0/node-groups/
+- RBAC, ver como fazer para o Terraform criar os Maps para os usuarios que irão utilizar o Cluster EKS.
+- Ver sobre o State, como fazer o destroy e tudo mais.
+    Criado step que faz o destroy via Pipeline.
+    ver como utilizar o State do S3 localmente. Alternar version do TF???
+- Fazer KB. Sobre o "~>". Sobre os versions do Terraform, EKS module, Github Actions Terraform version.
+    https://developer.hashicorp.com/terraform/language/expressions/version-constraints
+    https://github.com/hashicorp/learn-terraform-provision-eks-cluster/issues/53
+    https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/17.24.0
+- Billing, acompanhar.
+
+
+
+
+
+
+
+
+    Fazer o "map_roles" e "map_users" via TF, antes?
+    Tentar-3:
+    https://nextlinklabs.com/resources/insights/handling-authentication-in-eks-clusters-kubernetes-aws-iam
+
+
+
+
+
+
+
+# dia 20/02/2023
+
+- Criado mapeamento de usuários e roles.
+
+~~~~h
+
+# Mapeamento de Roles e Usuários 
+
+  map_roles          = [
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-admin-role"     # The ARN of the IAM role
+      username = "eks-admin-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-developer-role"     # The ARN of the IAM role
+      username = "eks-developer-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = [ "" ]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::261106957109:user/fernandomullerjr8596"      # The ARN of the IAM user to add.
+      username = "fernandomullerjr8596"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+~~~~

@@ -35,6 +35,30 @@ module "eks" {
   ]
 }
 
+
+# Mapeamento de Roles e Usuários 
+
+  map_roles          = [
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-admin-role"     # The ARN of the IAM role
+      username = "eks-admin-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-developer-role"     # The ARN of the IAM role
+      username = "eks-developer-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = [ "" ]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::261106957109:user/fernandomullerjr8596"      # The ARN of the IAM user to add.
+      username = "fernandomullerjr8596"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
 #comentario teste - alteração - 19/02/2023
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
