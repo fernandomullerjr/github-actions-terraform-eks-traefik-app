@@ -35,3 +35,26 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = local.cluster_name
 }
+
+
+# Novos Outputs, adicionados no dia 20/02/2023
+
+output "cluster_iam_role_arn" {
+  description = "IAM role ARN of the EKS cluster."
+  value       = module.eks.cluster_iam_role_arn
+}
+
+output "cluster_iam_role_name" {
+  description = "IAM role name of the EKS cluster."
+  value       = module.eks.cluster_iam_role_name
+}
+
+output "worker_iam_role_arn" {
+  description = "default IAM role ARN for EKS worker groups."
+  value       = module.eks.worker_iam_role_arn
+}
+
+output "worker_iam_role_name" {
+  description = "default IAM role name for EKS worker groups."
+  value       = module.eks.worker_iam_role_name
+}

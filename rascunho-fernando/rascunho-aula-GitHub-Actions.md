@@ -2665,6 +2665,11 @@ module "eks_blueprints" {
     Fazer o "map_roles" e "map_users" via TF, antes?
     Tentar-3:
     https://nextlinklabs.com/resources/insights/handling-authentication-in-eks-clusters-kubernetes-aws-iam
+- Exemplos, ver os manifestos de exemplo do curso 50-exemplos:
+    https://github.com/stacksimplify/terraform-on-aws-eks
+    <https://github.com/stacksimplify/terraform-on-aws-eks>
+    https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/08-AWS-EKS-Cluster-Basics
+    <https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/08-AWS-EKS-Cluster-Basics>
 - Verificar como fazer pro EKS ler os ASG e adicionar os node-groups. Efetuar TSHOOT, porque o cluster EKS não adiciona os workers/node-groups.
     https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
     https://aws.amazon.com/pt/premiumsupport/knowledge-center/eks-kubernetes-object-access-error/
@@ -2690,3 +2695,39 @@ module "eks_blueprints" {
     Fazer o "map_roles" e "map_users" via TF, antes?
     Tentar-3:
     https://nextlinklabs.com/resources/insights/handling-authentication-in-eks-clusters-kubernetes-aws-iam
+
+
+
+
+
+
+
+# dia 20/02/2023
+
+- Criado mapeamento de usuários e roles.
+
+~~~~h
+
+# Mapeamento de Roles e Usuários 
+
+  map_roles          = [
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-admin-role"     # The ARN of the IAM role
+      username = "eks-admin-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-developer-role"     # The ARN of the IAM role
+      username = "eks-developer-role"                                           # The user name within Kubernetes to map to the IAM role
+      groups   = [ "" ]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::261106957109:user/fernandomullerjr8596"      # The ARN of the IAM user to add.
+      username = "fernandomullerjr8596"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+~~~~
